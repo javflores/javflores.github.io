@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  LSCC Workshop: From zero to Continuous Delivery with Docker (Part 1)
+title:  From zero to Continuous Delivery with Docker, day 1
 ---
 
 Sometimes I use my blog as a place to store my notes online.
