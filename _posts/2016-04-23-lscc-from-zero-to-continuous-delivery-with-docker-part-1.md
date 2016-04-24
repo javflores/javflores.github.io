@@ -410,30 +410,21 @@ docker-compose -f docker-compose.yml scale web2=2
 
 In order to deploy an application with Docker we need to push an image to a registry during the build. When we deploy the app, we will do docker run and pull the image from the registry.
 
-These are the initial steps:
+First let's fork this repo into our own github account:  [https://github.com/codurance/simple_rest](https://github.com/codurance/simple_rest). This is a simple web app written in Java. It uses something called Gradle that it is used to run Java apps.
 
-- First let's fork this repo into our own github account:  [https://github.com/codurance/simple_rest](https://github.com/codurance/simple_rest)
-This is a simple web app written in Java. It uses something called Gradle that it is used to run Java apps.
-
-- Now let's clone it into the machine with Docker:
+Now let's clone it into the machine with Docker:
 
 {% highlight cs %}
 git clone https://github.com/javflores/simple_rest
 {% endhighlight %}
 
-- Let's go to TeamCity now and set up a Project. [http://teamcity.training.codurance.io/project.html?projectId=Workstation8](http://teamcity.training.codurance.io/project.html?projectId=Workstation8)
-We put a name of the project.
+Let's go to TeamCity now and set up a Project. This is the address: [http://teamcity.training.codurance.io/project.html?projectId=Workstation8](http://teamcity.training.codurance.io/project.html?projectId=Workstation8). We put a name of the project.
 In VCS Roots we put the url of our github repo: [https://github.com/javflores/simple_rest.git](https://github.com/javflores/simple_rest.git)
 
 ### 1. Build 
 
 Let's create a Build configuration that will be responsible to generate the executable.
-In General Settings we specify the Artifact paths that this build needs:
-
-{% highlight cs %}
-docker/Dockerfile
-build/distributions/simple_rest.tar
-{% endlight %}
+In General Settings we specify the Artifact paths that this build needs: docker/Dockerfile and build/distributions/simple_rest.tar
 
 We set up a Build step of type Gradle, we tell the gradle file: in this case build.gradle.
 
