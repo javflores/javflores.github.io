@@ -59,7 +59,8 @@ Retry join tells what it is the consul servers cluster, when announcing it exist
 Let's create now the consul agent:
 
 {% highlight cs %}
-docker run -d -v /var/data/consul_config/:/config -v /var/data/consul_data:/data --net=host --label consul_agent --name consul_agent gliderlabs/consul-agent:0.6
+docker run -d -v /var/data/consul_config/:/config -v /var/data/consul_data:/data 
+  --net=host --label consul_agent --name consul_agent gliderlabs/consul-agent:0.6
 {% endhighlight %}
 
 Now in the UI we can check that our agent is being added, [http://consul-0.training.codurance.io:8500/ui/#/training/nodes/Workstation 8](http://consul-0.training.codurance.io:8500/ui/#/training/nodes/Workstation 8).
@@ -108,7 +109,8 @@ We use Consul facility for service discovery. We need to register a name for our
 Now let's create the registrator:
 
 {% highlight cs %}
-docker run -d --net=host -v /var/run/docker.sock:/tmp/docker.sock --label registrator --name registrator gliderlabs/registrator:v7 -ip 10.2.0.110 consul://10.2.0.110:8500
+docker run -d --net=host -v /var/run/docker.sock:/tmp/docker.sock 
+  --label registrator --name registrator gliderlabs/registrator:v7 -ip 10.2.0.110 consul://10.2.0.110:8500
 {% endhighlight %}
 
 In order to listen to events the container needs to publish some events thats why we have the .scock file above. 
