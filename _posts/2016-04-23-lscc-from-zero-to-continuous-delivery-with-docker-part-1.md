@@ -334,5 +334,77 @@ Inspect what containers any remote machine is running:
 docker -H tcp://<machine-name>:<port-name> ps -a
 {% endhighlight %}
 
+### Managing containers
+
+All this is nice but we have something called Docker compose that makes our life easier. If we create a **docker-compose.yml** file and put this:
+
+{% highlight cs %}
+ version: "2"
+
+ services:
+  web:
+   image: training/webapp
+   networks:
+    - service_network
+   command:
+    - "python"
+    - "app.py"
+ 
+  web2:
+   image: training/webapp
+   networks:
+    service_network:
+     aliases:
+      - web_no_two
+   command:
+    - "python"
+    - "app.py"
+ 
+  web3:
+   image: training/webapp
+   networks:
+    - service_network
+   command:
+    - "python"
+    - "app.py"
+ 
+ networks:
+  service_network:
+{% endhighlight %}
+
+We are telling docker compose to create 3 containers based on a given image and each will run the command. Also we are telling the network. For the second app we are also aliasing the network. Be careful with the tab position, it needs to match.
+
+Now we can start all these containers at once:
+
+{% highlight cs %}
+docker-compose -f docker-compose.yml up
+{% endhighlight %}
+
+And stop them:
+
+{% highlight cs %}
+docker-compose -f docker-compose.yml down
+{% endhighlight %}
+
+We can tell compose to create services and run them in the background:
+
+{% highlight cs %}
+docker-compose -f docker-compose.yml up -d
+{% endhighlight %}
+
+Now let's connect inside one of the containers:
+
+{% highlight cs %}
+docker exec -ti mycompose_web_1 bash
+{% endhighlight %}
+
+We can again install curl and dnsutils. To do that, since they are new we have to do: ```apt-get update```. Now we are ready to connect from one container to the others.
+
+This is awesome, we can tell one of the containers to scale to more containers:
+
+{% highlight cs %}
+docker-compose -f docker-compose.yml scale web2=2
+{% endhighlight %}
+
 
 
