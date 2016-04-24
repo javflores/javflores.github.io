@@ -43,27 +43,33 @@ We need a machine running a Docker daemon, Linux, Mac or Windows.
 ### Basic commands
 
 Get the version of Docker:
+
 {% highlight %} 
 docker version
 {% endhighlight %}
 
 More info about the Docker daemon:
+
 {% highlight cs %} 
 docker info
 {% endhighlight %}
 
 Help is really useful:
+
 {% highlight cs %} 
 docker help
 {% endhighlight %}
+
 Example: docker help run
 
-Find what images we've got downloaded
+Find what images we've got downloaded:
+
 {% highlight cs %} 
 docker images
 {% endlight %} 
 
 Images are stored in registries, the registry by default is DockerHub. To get an image into our machine:
+
 {% highlight cs %} 
 docker pull ubuntu
 {% endlight %}
@@ -75,11 +81,10 @@ In general the convention in the registry is ```[username/]repository:tag```
 We can navigate to Docker hub and search for Linux Centos: https://hub.docker.com/search/?isAutomated=0&isOfficial=0&page=1&pullCount=0&q=centos&starCount=0
 And pull one of them.
 
-If we want to have several images of the same thing like ubuntu you can put a tags. For example:
-```docker pull library/ubuntu:14.04```
-Suggestion, always use tags.
+If we want to have several images of the same thing like ubuntu you can put a tags. For example: ```docker pull library/ubuntu:14.04```. Suggestion, always use tags.
 
-We can remove images (It is a dangerous operation)
+We can remove images (It is a dangerous operation):
+
 {% highlight cs %} 
 docker rmi ubuntu:14.04
 {% endlight %}
@@ -91,6 +96,7 @@ docker rm $(docker ps -aq)
 {% endlight %}
 
 To run a command:
+
 {% highlight cs %}
 docker run busybox sh -c "echo Hello World"
 {% endlight %}
@@ -98,6 +104,7 @@ docker run busybox sh -c "echo Hello World"
 In this case it pulled an image from DockerHub called busybox and run inside the container a shell, Hello world.
 
 We can run a command based on name or label:
+
 {% highlight cs %}
 docker run --name juan busybox sh -c "echo Hello World"
 docker run --label juan busybox sh -c "echo Hello World"
@@ -106,72 +113,86 @@ docker run --label juan busybox sh -c "echo Hello World"
 Some commands require to use the imageId, but we don't need to provide the full imageId, but the first two numbers or 3 numbers.
 
 To get info about an image:
+
 {% highlight cs %}
 docker inspect <image-id>
 {% endlight %}
 
 And to see the logs:
+
 {% highlight cs %}
 docker logs <image-id>
 {% endlight %}
 
 Actually with the docker inspect command we can find where the log files of the process are and then we can see them with: 
+
 {% highlight cs %}
 sudo cat <file-path>
 {% endlight %}
 
 Let's run a more complicated program that prints Hello world in a while loop:
+
 {% highlight cs %}
 docker run -d --name loop_ubuntu ubuntu /bin/sh -c  "while true; do echo hello world; sleep 1; done"
 {% endlight %}
 
 We can kill it:
+
 {% highlight cs %}
 docker kill <id>
 {% endlight %}
 
 Or more gracefully:
+
 {% highlight cs %}
 docker stop <id>
 {% endlight %}
 
 Let actually run an application, we can use one of the training apps provided by Docker, in this case Python:
+
 {% highlight cs %}
 docker run -d --name web training/webapp python app.py
 {% endlight %}
 
 With -P it will expose a port number externally:
+
 {% highlight cs %}
 docker run -d -P training/webapp python app.py
 {% endlight %}
 
 To map a external port to an internal one:
+
 {% highlight cs %}
 docker run -d -p 8080:5000 -p 8081:5001 training/webapp python app.py
 {% endlight %}
 
 Let's see what containers we've got running:
+
 {% highlight cs %}
 docker ps -a -q
 {% endlight %}
 
 We can use this command to delete the running containers:
+
 {% highlight cs %}
 docker ps -a -q | xargs docker rm -f
 {% endlight %}
 
 To run a container interactively:
+
 {% highlight cs %}
 docker run -ti
 {% endlight %}
 
 For example: 
+
 {% highlight cs %}
 docker run -ti busybox sh
 {% endlight %}
 
 Now you are in the container and you can run the terminal. You can ```echo "Hello world" > HelloWorld.txt```
 We can also:
+
 {% highlight cs %}
 mkdir my_busybox
 cd my_busybox
@@ -181,16 +202,19 @@ nano Dockerfile
 This way we have created a Dockerfile from inside the container. The Docker file can execute linux commands for us and much more.
 
 Given a folder with a DockerFile we can build a container:
+
 {% highlight cs %}
 docker build
 {% endlight %}
 
 It is untagged so we can:
+
 {% highlight cs %}
 docker tag <tag
 {% endlight %}
 
 The following sets a new image based on that container or add changes to an image, container.
+
 {% highlight cs %}
 docker commit -m "My Busy Box" -a "Juan Vicaria" 42 my_busybox:v5
 {% endlight %}
@@ -198,55 +222,68 @@ docker commit -m "My Busy Box" -a "Juan Vicaria" 42 my_busybox:v5
 (we found 42 the image id of one container with docker ps -a)
 
 Then we can run the container, even providing a parameter into the Docker run:
+
 {% highlight cs %}
 docker run my_bussybox:v5 -c "echo Nothing"
 {% endlight %}
 
 ### Registries
 
-We can create private registries to hold images. In the workshop we had a private one ```registry.training.local\```
+We can create private registries to hold images. In the workshop we had a private one 
+ ```
+registry.training.local\
+```
 
 Before we tagged the image:
+
 {% highlight cs %}
 docker tag my_bussybox:v5 registry.training.local/juan_busybox
 {% endlight %}
 
 Then pushing the image given that my machine is connected to the private repo with the VPN:
+
 {% highlight cs %}
 docker push registry.training.local/juan_busybox
 {% endlight %}
 
 Finding all the images in a private repository:
+
 {% highlight cs %}
 curl registry.training.local/v2/_catalog | jq .
 {% endlight %}
 
 Finding all the history of an image and all the tags:
+
 {% highlight cs %}
 curl registry.training.local/v2/juan_busybox/tags/list | jq .
 {% endlight %}
 
 Something really interesting is that we can mount an external folder into the container so that we can modify the content or access it from the container:
+
 {% highlight cs %}
 docker run -v ${PWD}/my_volume/:/my_volume -ti busybox sh
 {% endlight %}
 
 Then inside the container we can see the files:
+
 {% highlight cs %}
 ls -ltr: show all the files
 {% endlight %}
 
 And even modify the external file since it is mounted inside:
+
 {% highlight cs %}
 echo "Inside" > /my_volume/Outside.txt
 {% endlight %}
 
 To only read it but not possible to modify it:
+
 {% highlight cs %}
 docker run -v ${PWD}/my_volume/:/my_volume:ro -ti busybox sh
 {% endlight %}
 
 We can also create a copy of certain files:
+
 {% highlight cs %}
 docker run -v ${PWD}/my_volume/Outside.txt:/my_volume/Inside.txt -ti busybox sh
 {% endlight %}
@@ -254,27 +291,33 @@ docker run -v ${PWD}/my_volume/Outside.txt:/my_volume/Inside.txt -ti busybox sh
 ### Networks
 
 To find all the connections running in a container:
+
 {% highlight cs %}
 docker network ls
 {% endlight %}
+
 One of them is the bridge, the one we use to communicate containers together.
 
 Create new network:
+
 {% highlight cs %}
 docker network create training-network
 {% endlight %}
 
 Create a web app and add it to the network:
+
 {% highlight cs %}
 docker run -d -P --name web --net training-network training/webapp python app.py
 {% endlight %}
 
 Create another app with the bash interactively and add it to the network:
+
 {% highlight cs %}
 docker run -ti --net training-network ubuntu bash
 {% endlight %}
 
 Now inside the second container, we install curl and dnsutils:
+
 {% highlight cs %}
 apt-get install -y curl
 apt-get install -y dnsutils
@@ -283,6 +326,7 @@ apt-get install -y dnsutils
 With this we can do: ```dig web``` and we can query the other container from the second container: ```curl web:5000```
 
 Inspect what containers any remote machine is running:
+
 {% highlight cs %}
 docker -H tcp://<machine-name>:<port-name> ps -a
 {% endlight %}
@@ -292,66 +336,70 @@ docker -H tcp://<machine-name>:<port-name> ps -a
 All this is nice but we have something called Docker compose that makes our life easier. If we create a **docker-compose.yml** file and put this:
 
 {% highlight cs %}
-version: "2"
+ version: "2"
 
-services:
- web:
-  image: training/webapp
-  networks:
-   - service_network
-  command:
-   - "python"
-   - "app.py"
-
- web2:
-  image: training/webapp
-  networks:
-   service_network:
-    aliases:
-     - web_no_two
-  command:
-   - "python"
-   - "app.py"
-
- web3:
-  image: training/webapp
-  networks:
-   - service_network
-  command:
-   - "python"
-   - "app.py"
-
-networks:
- service_network:
+ services:
+  web:
+   image: training/webapp
+   networks:
+    - service_network
+   command:
+    - "python"
+    - "app.py"
+ 
+  web2:
+   image: training/webapp
+   networks:
+    service_network:
+     aliases:
+      - web_no_two
+   command:
+    - "python"
+    - "app.py"
+ 
+  web3:
+   image: training/webapp
+   networks:
+    - service_network
+   command:
+    - "python"
+    - "app.py"
+ 
+ networks:
+  service_network:
 {% endlight %}
 
 We are telling docker compose to create 3 containers based on a given image and each will run the command. Also we are telling the network.
 For the second app we are also aliasing the network. Be careful with the tab position, it needs to match.
 
 Now we can start all these containers at once:
+
 {% highlight cs %}
 docker-compose -f docker-compose.yml up
 {% endlight %}
 
 And stop them:
+
 {% highlight cs %}
 docker-compose -f docker-compose.yml down
 {% endlight %}
 
 We can tell compose to create services and run them in the background:
+
 {% highlight cs %}
 docker-compose -f docker-compose.yml up -d
 {% endlight %}
 
 Now let's connect inside one of the containers:
+
 {% highlight cs %}
 docker exec -ti mycompose_web_1 bash
 {% endlight %}
 
-We can again install curl and dnsutils. To do that, since they are new we have to do: ```apt-get update```
-Now we are ready to connect from one container to the others.
+We can again install curl and dnsutils. To do that, since they are new we have to do: ```apt-get update```. Now we are ready to connect from one container to the others.
 
 This is awesome, we can tell one of the containers to scale to more containers:
+
 {% highlight cs %}
 docker-compose -f docker-compose.yml scale web2=2
 {% endlight %}
@@ -360,22 +408,26 @@ docker-compose -f docker-compose.yml scale web2=2
 
 In order to deploy an application with Docker we need to push an image to a registry during the build. When we deploy the app, we will do docker run and pull the image from the registry.
 
-These are the steps:
+These are the initial steps:
 
-- First let's fork this repo into our own github account: https://github.com/codurance/simple_rest
+- First let's fork this repo into our own github account: [https://github.com/codurance/simple_rest](https://github.com/codurance/simple_rest)
 This is a simple web app written in Java. It uses something called Gradle that it is used to run Java apps.
 
 - Now let's clone it into the machine with Docker:
+
 {% highlight cs %}
 git clone https://github.com/javflores/simple_rest
 {% endlight %}
 
-- Let's go to TeamCity now and set up a Project. http://teamcity.training.codurance.io/project.html?projectId=Workstation8
+- Let's go to TeamCity now and set up a Project. [http://teamcity.training.codurance.io/project.html?projectId=Workstation8](http://teamcity.training.codurance.io/project.html?projectId=Workstation8)
 We put a name of the project.
-In VCS Roots we put the url of our github repo: https://github.com/javflores/simple_rest.git
+In VCS Roots we put the url of our github repo: [https://github.com/javflores/simple_rest.git](https://github.com/javflores/simple_rest.git)
 
-- **1. Build**: Let's create a Build configuration that will be responsible to generate the executable.
+### 1. Build 
+
+Let's create a Build configuration that will be responsible to generate the executable.
 In General Settings we specify the Artifact paths that this build needs:
+
 {% highlight cs %}
 docker/Dockerfile
 build/distributions/simple_rest.tar
@@ -385,11 +437,15 @@ We set up a Build step of type Gradle, we tell the gradle file: in this case bui
 
 Let's setup also a VCS trigger so that anytime there is a change in github master, this will trigger.
 
-- **2. Release**: This will publish a docker container in our machine.
+### 2. Release
+
+This will publish a docker container in our machine.
 To execute this we need a trigger which is the previous step, 1. Build.
 
 The Build Steps we need here are two:
- - A command line step to build a docker container and push it to the registry, the tag is based on the build number:
+
+ 1. A command line step to build a docker container and push it to the registry, the tag is based on the build number:
+ 
 {% highlight cs %}
  #!/bin/bash
  set e
@@ -397,12 +453,14 @@ The Build Steps we need here are two:
  docker push registry.training.local/workstation-8:%build.number%
 {% endlight %}
  
- -A command line to publish the release version:
+ 2. A command line to publish the release version:
+ 
  {% highlight cs %}
  echo %build.number% > release.version
  {% endlight %}
 
 We need to set a snapshot dependency on the previous step and it needs the artifacts dependencies from the previous build (mark Clean destination paths before downloading artifacts, so we start clean): 
+
 {% highlight cs %}
 Dockerfile
 simple_rest.tar
@@ -410,47 +468,60 @@ simple_rest.tar
 
 In General setting we tell the artifacts paths that this step will publish: ```release.version```
 
-- **3. Deploy**: This will publish a docker container in our machine.
-To execute this we need a trigger which is the previous step, 2. Release.
+### 3. Deploy 
+
+This will publish a docker container in our machine.
+
+To execute this we need a **trigger** which is the previous step, 2. Release.
 Here only one Build step which again is a command line with the following:
+
 {% highlight cs %}
-#!/bin/bash
-set -e
-export IMAGE_VERSION=$(cat release.version)
-export DOCKER_HOST=tcp://workstation-8.training.local:2375
-docker rm -f workstation-8 || echo "writing application is out running"
-docker run -d -p 80:4567 --name workstation-2 registry.training.local/workstation-8:${IMAGE_VERSION}
+ #!/bin/bash
+ set -e
+ export IMAGE_VERSION=$(cat release.version)
+ export DOCKER_HOST=tcp://workstation-8.training.local:2375
+ docker rm -f workstation-8 || echo "writing application is out running"
+ docker run -d -p 80:4567 --name workstation-2 registry.training.local/workstation-8:${IMAGE_VERSION}
 {% endlight %}
 
 First we check for errors, we create a couple of variables. Then we delete the previous container that existed in our machine.
 The first time it won't exit so we just do echo. Finally we simply run the container.
 
-Now we can do any changes in github or hit Run in the first step in teamcity. We should be able to run in our browser: localhost/hello and localhost/healthcheck
+Now we can do any changes in github or hit Run in the first step in teamcity. We should be able to run in our browser: 
+
+localhost/hello and localhost/healthcheck
+
 Also in our machine we can check that the container was created and if it running:
+
 {% highlight cs %}
-docker images
-docker ps
+ docker images
+ docker ps
 {% endlight %}
 
 We can also do ```curl localhost/hello``` and we should see *Hello world*.
 
+### Using Docker Compose in Team City
+
 The last thing of the day was to use Docker compose with the team city setup.
 Everything is the same but:
 
-- In step 1, we publish another artifact, the docker-compose.yml:
+1. In step 1, we publish another artifact, the docker-compose.yml:
+
 {% highlight cs %}
 docker/Dockerfile
 docker/docker-compose.yml
 build/distributions/simple_rest.tar
 {% endlight %}
 
-- In step 2 we publish that artifact again:
+2. In step 2 we publish that artifact again:
+
 {% highlight cs %}
 release.version
 docker-compose.yml
 {% endlight %}
 
-- In step 3, in the Build step add the following:
+3. In step 3, in the Build step add the following:
+
 {% highlight cs %}
 #!/bin/bash
 set -e
