@@ -406,5 +406,138 @@ This is awesome, we can tell one of the containers to scale to more containers:
 docker-compose -f docker-compose.yml scale web2=2
 {% endhighlight %}
 
+## Deployment of an application using Docker and TeamCity
 
+In order to deploy an application with Docker we need to push an image to a registry during the build. When we deploy the app, we will do docker run and pull the image from the registry.
+
+These are the initial steps:
+
+- First let's fork this repo into our own github account:  [https://github.com/codurance/simple_rest](https://github.com/codurance/simple_rest)
+This is a simple web app written in Java. It uses something called Gradle that it is used to run Java apps.
+
+- Now let's clone it into the machine with Docker:
+
+{% highlight cs %}
+git clone https://github.com/javflores/simple_rest
+{% endhighlight %}
+
+- Let's go to TeamCity now and set up a Project. [http://teamcity.training.codurance.io/project.html?projectId=Workstation8](http://teamcity.training.codurance.io/project.html?projectId=Workstation8)
+We put a name of the project.
+In VCS Roots we put the url of our github repo: [https://github.com/javflores/simple_rest.git](https://github.com/javflores/simple_rest.git)
+
+### 1. Build 
+
+Let's create a Build configuration that will be responsible to generate the executable.
+In General Settings we specify the Artifact paths that this build needs:
+
+{% highlight cs %}
+docker/Dockerfile
+build/distributions/simple_rest.tar
+{% endlight %}
+
+We set up a Build step of type Gradle, we tell the gradle file: in this case build.gradle.
+
+Let's setup also a VCS trigger so that anytime there is a change in github master, this will trigger.
+
+### 2. Release
+
+This will publish a docker container in our machine.
+To execute this we need a trigger which is the previous step, 1. Build.
+
+The Build Steps we need here are two:
+
+ 1. A command line step to build a docker container and push it to the registry, the tag is based on the build number:
+ 
+{% highlight cs %}
+ #!/bin/bash
+ set e
+ docker build --tag registry.training.local/workstation-8:%build.number% .
+ docker push registry.training.local/workstation-8:%build.number%
+{% endhighlight %}
+ 
+ 2. A command line to publish the release version:
+ 
+ {% highlight cs %}
+ echo %build.number% > release.version
+ {% endhighlight %}
+
+We need to set a snapshot dependency on the previous step and it needs the artifacts dependencies from the previous build (mark Clean destination paths before downloading artifacts, so we start clean): 
+
+{% highlight cs %}
+Dockerfile
+simple_rest.tar
+{% endhighlight %}
+
+In General setting we tell the artifacts paths that this step will publish: ```release.version```
+
+### 3. Deploy 
+
+This will publish a docker container in our machine.
+
+To execute this we need a **trigger** which is the previous step, 2. Release.
+Here only one Build step which again is a command line with the following:
+
+{% highlight cs %}
+ #!/bin/bash
+ set -e
+ export IMAGE_VERSION=$(cat release.version)
+ export DOCKER_HOST=tcp://workstation-8.training.local:2375
+ docker rm -f workstation-8 || echo "writing application is out running"
+ docker run -d -p 80:4567 --name workstation-2 registry.training.local/workstation-8:${IMAGE_VERSION}
+{% endhighlight %}
+
+First we check for errors, we create a couple of variables. Then we delete the previous container that existed in our machine.
+The first time it won't exit so we just do echo. Finally we simply run the container.
+
+Now we can do any changes in github or hit Run in the first step in teamcity. We should be able to run in our browser: 
+
+localhost/hello and localhost/healthcheck
+
+Also in our machine we can check that the container was created and if it running:
+
+{% highlight cs %}
+ docker images
+ docker ps
+{% endhighlight %}
+
+We can also do ```curl localhost/hello``` and we should see *Hello world*.
+
+### Using Docker Compose in Team City
+
+The last thing of the day was to use Docker compose with the team city setup.
+Everything is the same but:
+
+1. In step 1, we publish another artifact, the docker-compose.yml:
+
+{% highlight cs %}
+docker/Dockerfile
+docker/docker-compose.yml
+build/distributions/simple_rest.tar
+{% endhighlight %}
+
+2. In step 2 we publish that artifact again:
+
+{% highlight cs %}
+release.version
+docker-compose.yml
+{% endhighlight %}
+
+3. In step 3, in the Build step add the following:
+
+{% highlight cs %}
+#!/bin/bash
+set -e
+export IMAGE_VERSION=$(cat release.version)
+export DOCKER_HOST=tcp://workstation-8.training.local:2375
+
+docker-compose down
+docker-compose up -d
+{% endhighlight %}
+
+Really simple, just stop containers define in the  Docker compose file and bring them up again.
+
+
+That was it for the day. Quite a day, too much to process.
+Much more tomorrow. 
+Thanks to Robert and Codurance to run this great workshop. I'm enjoying and finally get on better with Docker.
 
