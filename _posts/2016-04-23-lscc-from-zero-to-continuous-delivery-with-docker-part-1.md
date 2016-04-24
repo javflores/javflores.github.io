@@ -460,3 +460,79 @@ In General setting we tell the artifacts paths that this step will publish:
 release.version
 {% endhighlight %}
 
+### 3. Deploy 
+
+This will publish a docker container in our machine.
+
+To execute this we need a **trigger** which is the previous step, 2. Release.
+Here we have only one Build step which again is a command line with the following:
+
+{% highlight cs %}
+ #!/bin/bash
+ set -e
+ export IMAGE_VERSION=$(cat release.version)
+ export DOCKER_HOST=tcp://workstation-8.training.local:2375
+ docker rm -f workstation-8 || echo "writing application is out running"
+ docker run -d -p 80:4567 --name workstation-2 registry.training.local/workstation-8:${IMAGE_VERSION}
+{% endhighlight %}
+
+First we check for errors, we create a couple of variables. Then we delete the previous container that existed in our machine.
+The first time it won't exit so we just do echo. Finally we simply run the container.
+
+Now we can do any changes in github or hit Run in the first step in teamcity. We should be able to run in our browser:  localhost/hello and localhost/healthcheck
+
+Also in our machine we can check that the container was created and if it running:
+
+{% highlight cs %}
+ docker images
+ docker ps
+{% endhighlight %}
+
+We can also do:
+
+{% highlight cs %}
+curl localhost/hello
+{% endhighlight %}
+
+and we should see *Hello world*.
+
+### Using Docker Compose in Team City
+
+The last thing of the day was to use Docker compose with the team city setup.
+Everything is the same but...
+
+In step 1, we publish another artifact, the docker-compose.yml:
+
+{% highlight cs %}
+docker/Dockerfile
+docker/docker-compose.yml
+build/distributions/simple_rest.tar
+{% endhighlight %}
+
+In step 2 we publish that artifact again:
+
+{% highlight cs %}
+release.version
+docker-compose.yml
+{% endhighlight %}
+
+In step 3, in the Build step add the following:
+
+{% highlight cs %}
+#!/bin/bash
+set -e
+export IMAGE_VERSION=$(cat release.version)
+export DOCKER_HOST=tcp://workstation-8.training.local:2375
+
+docker-compose down
+docker-compose up -d
+{% endhighlight %}
+
+Really simple, just stop containers define in the  Docker compose file and bring them up again.
+
+
+That was it for the day. Quite a day, too much to process.
+Much more tomorrow. 
+Thanks to Robert and Codurance to run this great workshop. I'm enjoying and finally get on better with Docker.
+
+
