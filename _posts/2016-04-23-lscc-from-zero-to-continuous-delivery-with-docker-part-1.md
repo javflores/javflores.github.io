@@ -430,3 +430,33 @@ We set up a Build step of type Gradle, we tell the gradle file: in this case bui
 
 Let's setup also a VCS trigger so that anytime there is a change in github master, this will trigger.
 
+### 2. Release
+
+This will publish a docker container in our machine.
+To execute this we need a trigger which is the previous step, 1. Build.
+
+The Build Steps we need here are two.
+
+The first one is a command line step to build a docker container and push it to the registry, the tag is based on the build number:
+ 
+{% highlight cs %}
+ #!/bin/bash
+ set e
+ docker build --tag registry.training.local/workstation-8:%build.number% .
+ docker push registry.training.local/workstation-8:%build.number%
+{% endhighlight %}
+ 
+
+The second one is another command line to publish the release version:
+ 
+{% highlight cs %}
+echo %build.number% > release.version
+{% endhighlight %}
+
+We need to set a snapshot dependency on the previous step and it needs the artifacts dependencies from the previous build (mark Clean destination paths before downloading artifacts, so we start clean):  Dockerfile and simple_rest.tar.
+
+In General setting we tell the artifacts paths that this step will publish: 
+{% highlight cs %}
+release.version
+{% endhighlight %}
+
