@@ -229,5 +229,110 @@ Then we can run the container, even providing a parameter into the Docker run:
 docker run my_bussybox:v5 -c "echo Nothing"
 {% endhighlight %}
 
+### Registries
+
+We can create private registries to hold images. In the workshop we had a private one 
+
+{% highlight cs %}
+registry.training.local\
+{% endhighlight %}
+
+Before we tagged the image:
+
+{% highlight cs %}
+docker tag my_bussybox:v5 registry.training.local/juan_busybox
+{% endhighlight %}
+
+Then pushing the image given that my machine is connected to the private repo with the VPN:
+
+{% highlight cs %}
+docker push registry.training.local/juan_busybox
+{% endhighlight %}
+
+Finding all the images in a private repository:
+
+{% highlight cs %}
+curl registry.training.local/v2/_catalog | jq .
+{% endhighlight %}
+
+Finding all the history of an image and all the tags:
+
+{% highlight cs %}
+curl registry.training.local/v2/juan_busybox/tags/list | jq .
+{% endhighlight %}
+
+Something really interesting is that we can mount an external folder into the container so that we can modify the content or access it from the container:
+
+{% highlight cs %}
+docker run -v ${PWD}/my_volume/:/my_volume -ti busybox sh
+{% endhighlight %}
+
+Then inside the container we can see the files:
+
+{% highlight cs %}
+ls -ltr: show all the files
+{% endhighlight %}
+
+And even modify the external file since it is mounted inside:
+
+{% highlight cs %}
+echo "Inside" > /my_volume/Outside.txt
+{% endhighlight %}
+
+To only read it but not possible to modify it:
+
+{% highlight cs %}
+docker run -v ${PWD}/my_volume/:/my_volume:ro -ti busybox sh
+{% endhighlight %}
+
+We can also create a copy of certain files:
+
+{% highlight cs %}
+docker run -v ${PWD}/my_volume/Outside.txt:/my_volume/Inside.txt -ti busybox sh
+{% endhighlight %}
+
+### Networks
+
+To find all the connections running in a container:
+
+{% highlight cs %}
+docker network ls
+{% endhighlight %}
+
+One of them is the bridge, the one we use to communicate containers together.
+
+Create new network:
+
+{% highlight cs %}
+docker network create training-network
+{% endhighlight %}
+
+Create a web app and add it to the network:
+
+{% highlight cs %}
+docker run -d -P --name web --net training-network training/webapp python app.py
+{% endhighlight %}
+
+Create another app with the bash interactively and add it to the network:
+
+{% highlight cs %}
+docker run -ti --net training-network ubuntu bash
+{% endhighlight %}
+
+Now inside the second container, we install curl and dnsutils:
+
+{% highlight cs %}
+apt-get install -y curl
+apt-get install -y dnsutils
+{% endhighlight %}
+
+With this we can do: ```dig web``` and we can query the other container from the second container: ```curl web:5000```
+
+Inspect what containers any remote machine is running:
+
+{% highlight cs %}
+docker -H tcp://<machine-name>:<port-name> ps -a
+{% endhighlight %}
+
 
 
