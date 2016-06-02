@@ -76,6 +76,10 @@ Tests have become more concise and simple, yet they are explicit.
 ## Creating tools, test cases in Mocha.
 
 A trully proficient gardener may find that in a given context, none of the tools do a good job. Then they just apply patterns that they know from other contexts, even creating new tools, to solve the problem.
+
+We as software engineers should learn more than one language. Even if you are a Ruby developer, by learning different languages, different paradigms you will see *other ways*, you will find different ways to solve different problems, you will come back to your regular environment and you will be a more efficient profesional developer.
+Imagine our friend the gardener using always the same shovel no matter what the context is... Probably he won't be hired so often.
+
 A few days after doing the kata, we are doing some work in Javascript. We use Mocha as our testing framework so we did some research to find out if Mocha supports Test cases.
 It didn't. It didn't matter, we knew the language and we knew the concept so we implemented something similar.
 
