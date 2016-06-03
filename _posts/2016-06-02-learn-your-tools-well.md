@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Learn well your tools
+title: Learn your tools well
 ---
 
 ## Learning your tools
@@ -110,6 +110,6 @@ describe('For given number of elements', () => {
 });
 {% endhighlight %}
 
-Even though Mocha doesn't have an in-build functionality for TestCases, we have learnt well our tools, in this case Javascript ES2015.
+Even though Mocha doesn't have an in-build functionality for TestCases, we have learnt our tools well, in this case Javascript ES2015.
 
-Learn well your tools to reduce work. Thanks for reading!
+Learn your tools well to reduce work. Thanks for reading!
