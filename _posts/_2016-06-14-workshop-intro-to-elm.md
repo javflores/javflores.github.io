@@ -283,3 +283,127 @@ update msg model =
 We are updating the model record with an increased quantity. Actually we are creating a new model, but with a different quantity.
 
 (EXERCISE) It is a bit lame, now I can't go back, can you add a Decrease button?
+TIP: To add another type of message:
+
+{% highlight elm %}
+type Msg = 
+  Increase
+  | Decrease
+{% endhighlight %}
+
+This is called Union type.
+
+(SOLUTION)
+You will have to update the Msg type, change the update function and add the button in the view:
+
+{% highlight elm %}
+type Msg = 
+  Increase
+  | Decrease
+
+update msg model =
+  if msg == Increase then
+    ({model | quantity = model.quantity + 1 }, Cmd.none)
+    
+  else if msg == Decrease then
+    ({model | quantity = model.quantity - 1 }, Cmd.none)
+    
+  else 
+    (model, Cmd.none)
+
+view model =
+  div [class "content" ]
+    [ h1 [] [ text "Pluralizer" ]
+    , div [] 
+      [ button [ onClick Increase ] [text "Increase" ]
+      , button [ onClick Decrease ] [text "Decrease" ]
+      ]
+    , text (
+      (toString model.quantity) 
+      ++ " "
+      ++ (pluralize "shelf" "shelves" model.quantity))
+    ]
+{% endhighlight %}
+
+Great work! Any questions?
+
+The number is going negative. Let's put the minimum to zero:
+
+{% highlight elm %}
+update msg model =
+  if msg == Increase then
+    ({model | quantity = model.quantity + 1 }, Cmd.none)
+    
+  else if msg == Decrease then
+    ({model | quantity = Basics.max 0 (model.quantity - 1) }, Cmd.none)
+    
+  else 
+    (model, Cmd.none)
+{% endhighlight %}
+
+Actually better, let's disable the button when it get's to zero:
+
+{% highlight elm %}
+view model =
+  div [class "content" ]
+    [ h1 [] [ text "Pluralizer" ]
+    , div [] 
+      [ button [ onClick Increase ] [text "Increase" ]
+      , button [ onClick Decrease, disabled (model.quantity <= 0) ] [text "Decrease" ]
+      ]
+    , text (
+      (toString model.quantity) 
+      ++ " "
+      ++ (pluralize "shelf" "shelves" model.quantity))
+    ]
+{% endhighlight %}
+
+We shouldn't have logic in our views right?
+So let's move that check out of the button:
+
+{% highlight elm %}
+view model =
+  let isDisabled =
+    model.quantity <= 0
+    
+  in
+  div [class "content" ]
+    [ h1 [] [ text "Pluralizer" ]
+    , div [] 
+      [ button [ onClick Increase ] [text "Increase" ]
+      , button [ onClick Decrease, disabled isDisabled ] [text "Decrease" ]
+      ]
+    , text (
+      (toString model.quantity) 
+      ++ " "
+      ++ (pluralize "shelf" "shelves" model.quantity))
+    ]
+{% endhighlight %}
+
+Let binding works similar to Javascript, with one difference: it can't be reassigned (they act as constants). You can add as many properties as you like.
+
+(EXERCISE) Can you move the text above into a caption defined in the let?
+(SOLUTION)
+
+{% highlight elm %}
+view model =
+
+  let 
+    isDisabled =
+      model.quantity <= 0
+      
+    caption = 
+      (toString model.quantity) 
+      ++ " "
+      ++ (pluralize "shelf" "shelves" model.quantity)   
+    
+  in
+    div [class "content" ]
+      [ h1 [] [ text "Pluralizer" ]
+      , div [] 
+        [ button [ onClick Increase ] [text "Increase" ]
+        , button [ onClick Decrease, disabled isDisabled ] [text "Decrease" ]
+        ]
+      , text caption
+      ]
+{% endhighlight %}
