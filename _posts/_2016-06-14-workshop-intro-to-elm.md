@@ -7,6 +7,10 @@ Notes of my workshop.
 
 ## Presentation of Elm
 
+I ended up looking into Elm because I listened a podcast by the Redux creator, and he got the inspiration from Elm.
+Then I looked into Elm and I liked type safety and functional programming approach in the browser.
+But don't waste time on this explanation, let's do that some work!
+
 Who has written any code in Elm? Who knows what Elm is?
 How many people heard about Babel? Who has used Babel?
 Babel lets you start next generation Javascript today. Let's start by writting a function called pluralize in [Babels repl](https://babeljs.io/repl/):
@@ -277,3 +281,5 @@ update msg model =
 {% endhighlight %}
 
 We are updating the model record with an increased quantity. Actually we are creating a new model, but with a different quantity.
+
+(EXERCISE) It is a bit lame, now I can't go back, can you add a Decrease button?
