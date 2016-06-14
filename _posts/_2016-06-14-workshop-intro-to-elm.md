@@ -407,3 +407,36 @@ view model =
       , text caption
       ]
 {% endhighlight %}
+
+We can reuse stuff. Let's do the simplest way.
+
+(EXERCISE) Let's refactor the button into a separate function! I bet you can do that! 
+(SOLUTION) 
+
+{% highlight elm %}
+view model =
+
+  let 
+    isDisabled =
+      model.quantity <= 0
+      
+    caption = 
+      (toString model.quantity) 
+      ++ " "
+      ++ (pluralize "shelf" "shelves" model.quantity)   
+    
+  in
+    div [class "content" ]
+      [ h1 [] [ text "Pluralizer" ]
+      , div [] 
+        [ quantityButton "Increase" Increase
+        , quantityButton "Decrease" Decrease
+        ]
+      , text caption
+      ]
+      
+quantityButton caption msg =
+  button [ onClick msg ] [text caption ]
+{% endhighlight %}
+
+The best way is creating your own modules. But it is a bit out of scope here.
