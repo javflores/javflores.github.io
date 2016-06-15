@@ -657,4 +657,29 @@ main = Html.program
 
 Please, shout out your questions, issues, concerns, insults, matters, you can swear.
 
+## Some resources to go on with the learning
+
+https://www.gitbook.com/book/evancz/an-introduction-to-elm/details
+
+https://pragmaticstudio.com/blog/2014/12/19/getting-started-with-elm
+
+http://elm-lang.org/examples
+
+https://gist.github.com/ohanhi/0d3d83cf3f0d7bbea9db
+
+https://github.com/deadfoxygrandpa/Elm-Test
+
+https://www.dailydrip.com/topics/elm
+
+https://www.gitbook.com/book/sporto/elm-tutorial/details
+
+https://github.com/elm-guides/elm-for-js
+
+https://devchat.tv/js-jabber/175-jsj-elm-with-evan-czaplicki-and-richard-feldman
+
+http://tech.noredink.com/post/126978281075/walkthrough-introducing-elm-to-a-js-web-app
+
+https://github.com/javflores/javflores.github.io/blob/master/_posts/Elm-workshop.md
+
+https://github.com/javflores/elm-playground
 
