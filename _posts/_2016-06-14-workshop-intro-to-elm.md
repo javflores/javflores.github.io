@@ -440,3 +440,221 @@ quantityButton caption msg =
 {% endhighlight %}
 
 The best way is creating your own modules. But it is a bit out of scope here.
+
+## Type annotation (currying)
+
+So far we have created types and functions and Elm has inferred the types.
+Elm is inspired on Haskell and Haskell has something called type annotation.
+
+We could write typical comments, like:
+
+{% highlight elm %}
+-- takes two strings and a quantity and returns a string
+pluralize singular plural quantity =
+  if quantity == 1 then
+    singular
+  else
+    plural
+{% endhighlight %}
+
+But we know that gets out of date very quickly, why don't we write something that the compiler will understand.
+{% highlight elm %}
+pluralize : String -> String -> Int -> String
+pluralize singular plural quantity =
+  if quantity == 1 then
+    singular
+  else
+    plural
+{% endhighlight %}
+
+If we change the types the compiler will tell us. It is a more reliable documentation.
+You can look at that as: pluralize takes a String, String and an Int and returns a String.
+But it is not totally correct.
+
+Actually with this we can do something really good. Let's say I want to do a function to pluralize shelves:
+
+{% highlight elm %}
+pluralizeShelf quantity =
+  pluralize "shelve" "shelves" quantity
+{% endhighlight %}
+
+The type of that function is:
+{% highlight elm %}
+pluralizeShelf : Int -> String
+  pluralize "shelve" "shelves" quantity
+{% endhighlight %}
+
+So the cool thing about currying is that if you call pluralize and you don't pass all arguments is going to give you back another function which takes whatever arguments you had left. Then you can call that other function to sort of finish the job.
+For example, if we change pluralizeShelf to the following, it is going to do the same thing:
+{% highlight elm %}
+pluralizeShelf =
+  pluralize "shelve" "shelves"
+{% endhighlight %}
+
+Another example:
+{% highlight elm %}
+pluralizeShelves : Int -> String
+pluralizeShelves =
+  pluralizeShelf "shelves"
+  
+pluralizeShelf : String -> Int -> String
+pluralizeShelf =
+  pluralize "Shelves"
+{% endhighlight %}
+
+So pluralizeShelf is going to take the reminder of what pluralize needs. Finally pluralize type notation can be represented as:
+{% highlight elm %}
+pluralize : String -> String -> (Int -> String)
+{% endhighlight %}
+{% highlight elm %}
+pluralize : String -> (String -> (Int -> String))
+{% endhighlight %}
+
+If you take out the parentheses that's exactly what we had in the beginning.
+
+(EXERCISE) Can you write the type annotation of one of the functions we have created? Any will do! 
+
+## Type alias
+
+Type alias allows you to redefine the name of a type:
+
+{% highlight elm %}
+type alias Model =
+  { quantity : Int }
+{% endhighlight %}
+
+So then we can specify this type in our functions:
+
+{% highlight elm %}
+update : Msg -> Model -> (Model, Cmd a)
+{% endhighlight %}
+
+
+## The challenge
+
+I know you can do this, let's use all our knowledge to provide in the UI the word that we want to pluralize and the pluralized form. Then the rest of our UI should display one or the other.
+We need to add a couple of input fields (singular and plural). This is how you add an input field in Elm:
+
+{% highlight elm %}
+input [ type' "text", placeholder "Plural", onInput Plural ] []
+{% endhighlight %}
+
+We provide a bunch of attributes, one of them is function onInput, it will send a message Plural in that case. Update function can handle that. You'll have to add that message to the Message type and handling of that in the update (maybe adding some props to the model?).
+
+The new message will have a string parameter with the input, so in the Msg type you can define it:
+{% highlight elm %}
+type Msg = 
+  Increase
+  | Decrease
+  | Singular String
+  | Plural String
+{% endhighlight %}
+
+In the update you can use the case form which allows you to do pattern matching on the message:
+
+{% highlight elm %}
+update msg model =
+  case msg of
+    Increase ->
+      ({ model | quantity = model.quantity + 1 }, Cmd.none)
+    
+    Decrease ->
+      ({ model | quantity = Basics.max 0 (model.quantity - 1) }, Cmd.none)
+      
+    Singular newSingular ->
+      ({ model | singular = newSingular }, Cmd.none)
+      
+    Plural newPlural ->
+      ({ model | plural = newPlural }, Cmd.none)
+{% endhighlight %}
+
+Finally you may want to change the pluralize function. For convenience you may want to just use pluralize and pass the model parameters to it.
+
+This is my complete solution:
+
+{% highlight elm %}
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (..)
+import Html.App as Html
+
+
+init = 
+  ({ quantity = 5, singular = "shelf", plural = "shelves"  }, Cmd.none)
+  
+type Msg = 
+  Increase
+  | Decrease
+  | Singular String
+  | Plural String
+
+type alias Model =
+  { quantity : Int
+  , singular: String
+  , plural: String
+  }
+    
+update : Msg -> Model -> (Model, Cmd a)
+update msg model =
+  case msg of
+    Increase ->
+      ({ model | quantity = model.quantity + 1 }, Cmd.none)
+    
+    Decrease ->
+      ({ model | quantity = Basics.max 0 (model.quantity - 1) }, Cmd.none)
+      
+    Singular newSingular ->
+      ({ model | singular = newSingular }, Cmd.none)
+      
+    Plural newPlural ->
+      ({ model | plural = newPlural }, Cmd.none)
+  
+subscriptions model =
+  Sub.none
+  
+pluralize : String -> String -> Int -> String
+pluralize singular plural quantity =
+  if quantity == 1 then
+    singular
+  else
+    plural
+
+view model =
+
+  let 
+    isDisabled =
+      model.quantity <= 0
+      
+    caption = 
+      (toString model.quantity) 
+      ++ " "
+      ++ (pluralize model.singular model.plural model.quantity)   
+    
+  in
+    div [class "content" ]
+      [ h1 [] [ text "Pluralizer" ]
+      , div []
+        [ input [ type' "text", placeholder "Singular", onInput Singular ] []
+        , input [ type' "text", placeholder "Plural", onInput Plural ] []
+        ]
+      , div [] 
+        [ quantityButton "Increase" Increase False
+        , quantityButton "Decrease" Decrease isDisabled
+        ]
+      , text caption
+      ]
+      
+quantityButton caption msg isDisabled =
+  button [ onClick msg, disabled isDisabled ] [text caption ]
+    
+main = Html.program
+    { init = init,
+    view = view,
+    update = update,
+    subscriptions = subscriptions
+    }
+{% endhighlight %}
+
+Please, shout out your questions, issues, concerns, insults, matters, you can swear.
+
+
