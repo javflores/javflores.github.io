@@ -669,26 +669,26 @@ Please, shout out your questions, issues, concerns, insults, matters, you can sw
 
 ## Some resources to go on with the learning
 
-https://www.gitbook.com/book/evancz/an-introduction-to-elm/details
+[Good document, like a book, loads of examples](https://www.gitbook.com/book/evancz/an-introduction-to-elm/details)
 
-https://pragmaticstudio.com/blog/2014/12/19/getting-started-with-elm
+[One  intro blogpost with useful links](https://pragmaticstudio.com/blog/2014/12/19/getting-started-with-elm)
 
-http://elm-lang.org/examples
+[Code examples](http://elm-lang.org/examples)
 
-https://gist.github.com/ohanhi/0d3d83cf3f0d7bbea9db
+[Practical example of implementing Elm](https://gist.github.com/ohanhi/0d3d83cf3f0d7bbea9db)
 
-https://github.com/deadfoxygrandpa/Elm-Test
+[Elm tests](https://github.com/deadfoxygrandpa/Elm-Test)
 
-https://www.dailydrip.com/topics/elm
+[Video turorials](https://www.dailydrip.com/topics/elm)
 
-https://www.gitbook.com/book/sporto/elm-tutorial/details
+[Implementing a whole app step by step](https://www.gitbook.com/book/sporto/elm-tutorial/details)
 
-https://github.com/elm-guides/elm-for-js
+[Learning Elm for JS developers](https://github.com/elm-guides/elm-for-js)
 
-https://devchat.tv/js-jabber/175-jsj-elm-with-evan-czaplicki-and-richard-feldman
+[Podcast with Elm creator Evan Czaplicki](https://devchat.tv/js-jabber/175-jsj-elm-with-evan-czaplicki-and-richard-feldman)
 
-http://tech.noredink.com/post/126978281075/walkthrough-introducing-elm-to-a-js-web-app
+[Introducing Elm in a real web app in a company](http://tech.noredink.com/post/126978281075/walkthrough-introducing-elm-to-a-js-web-app)
 
-https://github.com/javflores/javflores.github.io/blob/master/_posts/Elm-workshop.md
+[This post](https://github.com/javflores/javflores.github.io/blob/master/_posts/Elm-workshop.md)
 
-https://github.com/javflores/elm-playground
+[My Elm examples](https://github.com/javflores/elm-playground)
