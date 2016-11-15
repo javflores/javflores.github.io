@@ -66,3 +66,36 @@ execute = function (item) {
 },
 ```
 
+Some links:
+////In here create a script that will do the following:
+//    var start;
+//
+//    $(document).ready(function() {
+//        start = Date.getTime();
+//
+//        $(window).unload(function() {
+//            end = Date.getTime();
+//            $.ajax({ 
+//                url: "log.php",
+//                data: {'timeSpent': end - start}
+//            })
+//        });
+//    }   from http://stackoverflow.com/questions/4667068/how-to-measure-a-time-spent-on-a-page
+
+    //rather than doing ajax, use ga to send an event similar to this: 'event' : 'unloadEvent', 'timeonpage' : calculated like mentioned above. http://www.simoahava.com/analytics/leverage-usebeacon-beforeunload-google-analytics/
+    //use transport beacon https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#transport
+    //why? https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
+	
+	
+http://www.simoahava.com/analytics/leverage-usebeacon-beforeunload-google-analytics/
+https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
+http://www.simoahava.com/analytics/use-page-visibility-api-google-tag-manager/
+http://www.analytics-ninja.com/blog/2015/02/real-time-page-google-analytics.html
+https://www.thyngster.com/google-analytics-added-sendbeacon-functionality-universal-analytics-javascript-api/
+https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#transport
+
+
+eventAction: unloadEvent
+eventCategory: timeonpage
+eventLabel:   /goto
+eventValue: 34871
