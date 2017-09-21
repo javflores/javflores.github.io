@@ -64,3 +64,6 @@ Maybe I take a look at it and according to the speaker everyone is going to writ
 Personally I doubt it. In my mind I'd rather keep on practicing my Elm instead of learning this copy that is less polished and less developer-happiness origeted. :D
 
 
+This is the video of the whole talk:
+https://www.facebook.com/pg/RedBadger/videos/?ref=page_internal
+
