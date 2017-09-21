@@ -18,7 +18,7 @@ Parent will see what has changed and trigger the fragment that needs to be queri
 
 Finally the typical mutationId that I don't know what it is, it is actually called Global object identifier or GraphqlId, and it is a cache key.
 
-Slides: https://www.graphql-training.com/lightweight-graphql-react/#1
+Slides: [https://www.graphql-training.com/lightweight-graphql-react/#1](https://www.graphql-training.com/lightweight-graphql-react/#1)
 
 
 ## CSS in React, spoilt for options
@@ -30,31 +30,33 @@ Solutions:
 
 ### CSS modules
 
-https://github.com/css-modules/css-modules
+[Documentation](https://github.com/css-modules/css-modules)
+
 What we use at Findmypast. Can define a css to be used in a particular page only and import it in the react component, the JS and the css live together in the same folder in harmony.
 They mentioned this package that I don't know if we use in FMP https://www.npmjs.com/package/classnames. I guess is similar to joinable by @rkotze.
 
 ### Styled components
 
-https://github.com/styled-components/styled-components
+[Documentation](https://github.com/styled-components/styled-components)
+
 Very different, it a combo of JS and CSS syntax. Honestly it looks a bit weird, but we can give it a try.
 
 ### Glamorous
 
-https://github.com/paypal/glamorous
+[Documentation](https://github.com/paypal/glamorous)
 
 Write your styles in JS syntax, similar to inline styles but you get all the powerful features of CSS.
 Looks interestinig. My issue is that, what happens if you don't like Glamorous, how do you go back to CSS? Would you have to rewrite everything again in CSS?
 
 ## ReasonML
 
-https://github.com/facebook/reason
+[Documentation](https://github.com/facebook/reason)
 
 These are all my notes of this talk:
 
 **THIS IS A COPY OF ELM. WHY?! WHY?!**
 
-It's ok, yes, it is a copy, but how many things do we copy or back and forth in software.
+It's ok, yes, it is a copy, but how many things do we copy or back and forth in software. A shiny hyped company copies the work of a PhD student that no one knows.
 ReasonML is the shiny new language by Facebook, that's why it is getting the hype. It has been created by one of the original members that createdd React, that's why it is hot.
 They are working hard to make it work really well with React and have Redux-style functionality built in ReasonML so that you don't need it anymor (Elm Architecture?!! *ehemehm* :D).
 
@@ -62,8 +64,8 @@ In the talk the speaker went through some of the features, basically functional 
 
 Maybe I take a look at it and according to the speaker everyone is going to write their React in ReasonML in one year time.
 Personally I doubt it. In my mind I'd rather keep on practicing my Elm instead of learning this copy that is less polished and less developer-happiness origeted. :D
-
+Sorry if you noticed some not good mood in there. At the end of the day is technology, and one shouldn't get too emotional with it.
 
 This is the video of the whole talk:
-https://www.facebook.com/pg/RedBadger/videos/?ref=page_internal
+[https://www.facebook.com/pg/RedBadger/videos/?ref=page_internal](https://www.facebook.com/pg/RedBadger/videos/?ref=page_internal)
 
