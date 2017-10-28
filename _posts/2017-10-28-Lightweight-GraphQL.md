@@ -2,7 +2,7 @@
 layout: post
 title:  "A lightweight GraphQL (Part I)"
 author: jflores
-date: 2017-05-02 11:00:00
+date: 2017-10-27 11:00:00
 categories: graphql, relay, react, api
 summary: "Let's see how Relay works under the hood to fetch data for us."
 ---
