@@ -52,3 +52,8 @@ Some...
 [Live webcasts and in-person UK](https://msevents.microsoft.com/CUI/InteractiveCalendar.aspx?culture=en-US#culture=en-US;calendar=yes;advanced=true;sortKey=date;sortOrder=DESC;pageEvent=false;calview=0;startDate=11/17/2014;endDate=2/15/2015;kwdAny=;countryId=GB;languageCode=en;eventType=2,1;searchcontrol=yes;s=1;msstore=undefined)
 
 [Connect Event 2014](http://channel9.msdn.com/Events/Visual-Studio/Connect-event-2014)
+
+### Frontend
+
+- [React, redux and Google analytics](https://github.com/mhipszki/react-redux-analytics):
+Explained in the [January London React meetup](https://business.facebook.com/RedBadger/videos/1749966208356448/)
